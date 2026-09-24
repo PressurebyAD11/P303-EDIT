@@ -56,6 +56,9 @@ export interface StyleRequest {
   targetFormality?: number;
   keepSlots?: SlotCategory[];
   regenerateSlots?: SlotCategory[];
+  // Feedback-driven flags (see EDIT_PRD.md §6.5).
+  requireStatement?: boolean; // "too basic" → force a statement piece
+  avoidStatement?: boolean; // "too bold" → no statement pieces
 }
 
 export interface Outfit {
