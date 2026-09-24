@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
+import { FeedbackOptions } from "@/components/feedback/FeedbackOptions";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { OutfitView } from "@/components/outfit/OutfitView";
@@ -10,11 +12,11 @@ import { storage } from "@/services";
 import { useSessionStore } from "@/state/sessionStore";
 
 export default function Reveal() {
+  const [showFeedbackOptions, setShowFeedbackOptions] = useState(false);
   const navigate = useNavigate();
   const currentOutfit = useSessionStore((state) => state.currentOutfit);
   const isGenerating = useSessionStore((state) => state.isGenerating);
   const error = useSessionStore((state) => state.error);
-  const styleMe = useSessionStore((state) => state.styleMe);
   const resetInputs = useSessionStore((state) => state.resetInputs);
 
   if (currentOutfit === null) {
@@ -45,8 +47,8 @@ export default function Reveal() {
     navigate("/style");
   };
 
-  const handleStyleAgain = async () => {
-    await styleMe();
+  const handleStyleAgain = () => {
+    setShowFeedbackOptions(true);
   };
 
   return (
@@ -97,7 +99,15 @@ export default function Reveal() {
         </p>
       ) : null}
 
-      <div className="mt-auto flex flex-col gap-3 pt-2 sm:flex-row">
+      {showFeedbackOptions ? (
+        <FeedbackOptions
+          onSelect={() => {
+            setShowFeedbackOptions(false);
+          }}
+        />
+      ) : null}
+
+      <div className="flex flex-col gap-3 pt-2 sm:flex-row">
         <Button
           type="button"
           variant="outline"
