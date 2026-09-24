@@ -2,8 +2,10 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { OutfitView } from "@/components/outfit/OutfitView";
 import { WhyItWorks } from "@/components/outfit/WhyItWorks";
+import { closetById } from "@/data/closet";
 import { storage } from "@/services";
 import { useSessionStore } from "@/state/sessionStore";
 
@@ -18,6 +20,12 @@ export default function Reveal() {
   if (currentOutfit === null) {
     return <Navigate to="/style" replace />;
   }
+
+  const outfitItems = currentOutfit.itemIds
+    .map((itemId) => closetById.get(itemId))
+    .filter((item): item is NonNullable<typeof item> => item !== undefined);
+
+  const loadingCards = outfitItems.map((item) => item.id);
 
   const handleLoveIt = async () => {
     await storage.save({
@@ -48,9 +56,39 @@ export default function Reveal() {
         <h2 className="text-2xl font-semibold tracking-tight">Here’s the outfit</h2>
       </header>
 
-      <section className="space-y-4">
-        <OutfitView outfit={currentOutfit} />
-        <WhyItWorks outfit={currentOutfit} />
+      <section className="space-y-4" aria-busy={isGenerating}>
+        {isGenerating ? (
+          <div className="grid gap-3 sm:grid-cols-2">
+            {loadingCards.map((itemId) => (
+              <article
+                key={itemId}
+                className="rounded-2xl border border-border/70 bg-background p-4 shadow-sm"
+              >
+                <div className="mb-3 flex items-center gap-3">
+                  <Skeleton className="size-3 rounded-full" />
+                  <div className="min-w-0 flex-1 space-y-2">
+                    <Skeleton className="h-4 w-2/3 rounded-full" />
+                    <Skeleton className="h-3 w-1/3 rounded-full" />
+                  </div>
+                </div>
+
+                <Skeleton className="aspect-[4/3] w-full rounded-xl" />
+              </article>
+            ))}
+          </div>
+        ) : (
+          <OutfitView outfit={currentOutfit} />
+        )}
+
+        {isGenerating ? (
+          <div className="rounded-2xl border border-border/70 bg-background p-4 shadow-sm">
+            <Skeleton className="h-4 w-full rounded-full" />
+            <Skeleton className="mt-3 h-4 w-11/12 rounded-full" />
+            <Skeleton className="mt-3 h-4 w-4/5 rounded-full" />
+          </div>
+        ) : (
+          <WhyItWorks outfit={currentOutfit} />
+        )}
       </section>
 
       {error !== null ? (
