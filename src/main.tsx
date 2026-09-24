@@ -6,6 +6,7 @@ import Home from "@/routes/Home";
 import Flow from "@/routes/Flow";
 import Reveal from "@/routes/Reveal";
 import Saved from "@/routes/Saved";
+import { Toaster } from "@/components/ui/sonner";
 
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    <Toaster />
     <RouterProvider router={router} />
   </StrictMode>
 );
