@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
 import { closetById } from "@/data/closet";
 import { FEEDBACK_LABELS, FEEDBACK_ORDER } from "@/lib/constants";
 import type { FeedbackReason } from "@/lib/types";
@@ -20,7 +19,7 @@ export function FeedbackOptions({ onSelect }: FeedbackOptionsProps) {
   if (currentOutfit === null) return null;
 
   const outfitItems = currentOutfit.itemIds
-    .map((itemId) => closetById.get(itemId))
+    .map((id) => closetById.get(id))
     .filter((item): item is NonNullable<typeof item> => item !== undefined);
 
   const handleReasonClick = async (reason: FeedbackReason) => {
@@ -28,7 +27,6 @@ export function FeedbackOptions({ onSelect }: FeedbackOptionsProps) {
       setShowPiecePicker(true);
       return;
     }
-
     setShowPiecePicker(false);
     await applyReasonFeedback(reason);
     onSelect?.();
@@ -41,78 +39,71 @@ export function FeedbackOptions({ onSelect }: FeedbackOptionsProps) {
   };
 
   return (
-    <section className="space-y-4 rounded-2xl border border-border/70 bg-background/90 p-4 shadow-sm">
-      <div className="space-y-1">
-        <p className="text-sm font-medium text-muted-foreground">What should I change?</p>
-        <h3 className="text-xl font-semibold tracking-tight">Refine this look</h3>
-      </div>
-
-      <div className="grid gap-2 sm:grid-cols-2">
+    <div className="flex flex-col gap-4">
+      {/* Reason chips */}
+      <div className="flex flex-col gap-2.5">
         {FEEDBACK_ORDER.map((reason) => {
-          const label = FEEDBACK_LABELS[reason];
           const isPiecePicker = reason === "dont-want-piece";
-
           return (
-            <Button
+            <button
               key={reason}
               type="button"
-              variant={isPiecePicker ? "outline" : "secondary"}
-              className="justify-start text-left"
-              onClick={() => {
-                void handleReasonClick(reason);
-              }}
+              onClick={() => void handleReasonClick(reason)}
+              className={`w-full text-left rounded-2xl px-4 h-12 text-sm font-bold transition-all active:scale-[0.98] ${
+                isPiecePicker
+                  ? "border border-border bg-card hover:border-foreground/30"
+                  : "bg-muted hover:bg-muted/70"
+              }`}
             >
-              {label}
-            </Button>
+              {FEEDBACK_LABELS[reason]}
+            </button>
           );
         })}
       </div>
 
-      {showPiecePicker ? (
-        <div className="space-y-2 rounded-xl border border-border/70 bg-muted/30 p-3">
-          <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-            Choose a piece to remove
-          </p>
-          <div className="flex flex-wrap gap-2">
+      {/* Piece picker */}
+      {showPiecePicker && (
+        <div className="rounded-2xl border border-border bg-card overflow-hidden">
+          <div className="px-4 py-3 border-b border-border">
+            <p className="text-[10px] tracking-[0.3em] uppercase font-semibold text-muted-foreground">
+              Remove a piece
+            </p>
+          </div>
+          <div className="divide-y divide-border">
             {outfitItems.map((item) => (
-              <Button
+              <button
                 key={item.id}
                 type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  void handleExclude(item.id);
-                }}
+                onClick={() => void handleExclude(item.id)}
+                className="w-full flex items-center px-4 h-12 text-left text-sm font-medium hover:bg-muted transition-colors"
               >
                 {item.name}
-              </Button>
+              </button>
             ))}
           </div>
         </div>
-      ) : null}
+      )}
 
-      <div className="flex flex-col gap-2 pt-2 sm:flex-row">
-        <Button
+      {/* Surprise me / Cancel */}
+      <div className="flex flex-col gap-2.5 pt-1">
+        <button
           type="button"
-          className="flex-1"
           onClick={async () => {
             await styleMe();
             onSelect?.();
           }}
+          className="w-full h-14 rounded-2xl bg-foreground text-background text-sm font-bold tracking-wide hover:opacity-90 active:scale-[0.98] transition-all"
         >
-          Surprise me (new look)
-        </Button>
-        <Button
+          Surprise me — new look
+        </button>
+        <button
           type="button"
-          variant="ghost"
-          className="flex-1"
-          onClick={() => {
-            onSelect?.();
-          }}
+          onClick={() => onSelect?.()}
+          className="w-full h-12 rounded-2xl text-sm font-bold text-muted-foreground hover:text-foreground hover:bg-muted active:scale-[0.98] transition-all"
         >
           Cancel
-        </Button>
+        </button>
       </div>
-    </section>
+    </div>
   );
 }

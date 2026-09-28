@@ -1,93 +1,114 @@
-import { Button } from "@/components/ui/button";
 import { COLOR_SWATCH, CONSTRAINT_LABELS, CONSTRAINT_ORDER } from "@/lib/constants";
 import { closet } from "@/data/closet";
 import { useSessionStore } from "@/state/sessionStore";
 
-type ConstraintsStepProps = {
-  className?: string;
-};
+const BOOLEAN_CONSTRAINTS = CONSTRAINT_ORDER.filter((c) => c !== "specific-piece");
 
-const BOOLEAN_CONSTRAINTS = CONSTRAINT_ORDER.filter((constraint) => constraint !== "specific-piece");
-
-export function ConstraintsStep({ className }: ConstraintsStepProps) {
+export function ConstraintsStep() {
   const constraints = useSessionStore((state) => state.constraints);
   const pinnedItemId = useSessionStore((state) => state.pinnedItemId);
   const toggleConstraint = useSessionStore((state) => state.toggleConstraint);
   const setPinned = useSessionStore((state) => state.setPinned);
 
   const specificPieceSelected = constraints.includes("specific-piece");
-  const pinnedItem = pinnedItemId === null ? null : closet.find((item) => item.id === pinnedItemId) ?? null;
+  const pinnedItem = pinnedItemId
+    ? (closet.find((item) => item.id === pinnedItemId) ?? null)
+    : null;
 
   return (
-    <div className={className}>
-      <div className="flex flex-wrap gap-2">
+    <div className="flex flex-col gap-4">
+      <p className="text-xs text-muted-foreground -mt-2">
+        Optional. Select all that apply.
+      </p>
+
+      <div className="flex flex-col gap-2.5">
         {BOOLEAN_CONSTRAINTS.map((constraint) => {
           const selected = constraints.includes(constraint);
-
           return (
-            <Button
+            <button
               key={constraint}
               type="button"
-              variant={selected ? "default" : "outline"}
               onClick={() => toggleConstraint(constraint)}
+              className={`w-full text-left rounded-2xl px-4 h-14 font-bold text-sm transition-all active:scale-[0.98] ${
+                selected
+                  ? "bg-foreground text-background"
+                  : "border border-border bg-card hover:border-foreground/30"
+              }`}
             >
               {CONSTRAINT_LABELS[constraint]}
-            </Button>
+            </button>
           );
         })}
 
-        <Button
+        <button
           type="button"
-          variant={specificPieceSelected ? "default" : "outline"}
           onClick={() => toggleConstraint("specific-piece")}
+          className={`w-full text-left rounded-2xl px-4 h-14 font-bold text-sm transition-all active:scale-[0.98] ${
+            specificPieceSelected
+              ? "bg-foreground text-background"
+              : "border border-border bg-card hover:border-foreground/30"
+          }`}
         >
           {CONSTRAINT_LABELS["specific-piece"]}
-        </Button>
+        </button>
       </div>
 
-      {specificPieceSelected ? (
-        <div className="mt-3 space-y-3 rounded-2xl border border-border/70 bg-muted/30 p-3">
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-sm font-medium">Pick a specific piece</p>
-            {pinnedItem !== null ? (
-              <Button type="button" variant="ghost" size="sm" onClick={() => setPinned(null)}>
-                Clear
-              </Button>
-            ) : null}
-          </div>
-
-          <div className="max-h-56 overflow-y-auto pr-1">
-            <div className="grid gap-2 sm:grid-cols-2">
-              {closet.map((item) => {
-                const selected = item.id === pinnedItemId;
-
-                return (
-                  <Button
-                    key={item.id}
-                    type="button"
-                    variant={selected ? "default" : "outline"}
-                    className="h-auto justify-start gap-2 px-3 py-2 text-left"
-                    onClick={() => setPinned(item.id)}
-                  >
-                    <span
-                      aria-hidden="true"
-                      className="size-2.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: COLOR_SWATCH[item.colorFamily] }}
-                    />
-                    <span className="min-w-0 truncate">{item.name}</span>
-                  </Button>
-                );
-              })}
-            </div>
-          </div>
-
-          {pinnedItem !== null ? (
-            <p className="text-sm text-muted-foreground">
-              Selected: <span className="font-medium text-foreground">{pinnedItem.name}</span>
+      {specificPieceSelected && (
+        <div className="rounded-2xl border border-border bg-card overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+            <p className="text-[10px] tracking-[0.3em] uppercase font-semibold text-muted-foreground">
+              Pick a piece
             </p>
-          ) : null}
+            {pinnedItem && (
+              <button
+                type="button"
+                onClick={() => setPinned(null)}
+                className="text-[11px] font-semibold text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          <div className="max-h-52 overflow-y-auto divide-y divide-border">
+            {closet.map((item) => {
+              const selected = item.id === pinnedItemId;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setPinned(item.id)}
+                  className={`w-full flex items-center gap-3 px-4 h-12 text-left transition-colors ${
+                    selected ? "bg-foreground" : "hover:bg-muted"
+                  }`}
+                >
+                  <span
+                    aria-hidden="true"
+                    className="size-2.5 rounded-full shrink-0 ring-1 ring-border/50"
+                    style={{ backgroundColor: COLOR_SWATCH[item.colorFamily] }}
+                  />
+                  <span
+                    className={`text-sm font-medium truncate ${
+                      selected ? "text-background" : "text-foreground"
+                    }`}
+                  >
+                    {item.name}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {pinnedItem && (
+            <div className="px-4 py-3 border-t border-border bg-muted/40">
+              <p className="text-xs text-muted-foreground">
+                Selected:{" "}
+                <span className="font-semibold text-foreground">{pinnedItem.name}</span>
+              </p>
+            </div>
+          )}
         </div>
-      ) : null}
+      )}
     </div>
   );
 }

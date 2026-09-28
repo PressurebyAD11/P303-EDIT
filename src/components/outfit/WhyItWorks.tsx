@@ -6,8 +6,11 @@ type WhyItWorksProps = {
 
 export function WhyItWorks({ outfit }: WhyItWorksProps) {
   return (
-    <div className="rounded-2xl border border-border/70 bg-background p-4 shadow-sm">
-      <p className="text-sm leading-6 text-foreground">{outfit.explanation}</p>
+    <div className="rounded-2xl border border-border bg-card p-4">
+      <p className="text-[10px] tracking-[0.35em] uppercase font-semibold text-muted-foreground mb-2">
+        Why it works
+      </p>
+      <p className="text-sm leading-relaxed text-foreground/80">{outfit.explanation}</p>
     </div>
   );
 }

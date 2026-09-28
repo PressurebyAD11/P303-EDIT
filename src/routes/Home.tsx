@@ -1,28 +1,157 @@
 import { Link } from "react-router-dom";
-import { buttonVariants } from "@/components/ui/button";
+import { Sparkles, ChevronRight } from "lucide-react";
+import { trends } from "@/data/trends";
+import { closet } from "@/data/closet";
+import { useAuthStore } from "@/state/authStore";
 
 function greeting(): string {
   const h = new Date().getHours();
-  if (h < 12) return "Morning";
-  if (h < 18) return "Afternoon";
-  return "Evening";
+  if (h < 12) return "Good morning";
+  if (h < 18) return "Good afternoon";
+  return "Good evening";
 }
 
+function todayLabel(): string {
+  return new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+const SWATCH: Record<string, string> = {
+  neutral: "#d1cdc8",
+  warm: "#d4b89a",
+  cool: "#9fb4d4",
+  bold: "#d47090",
+};
+
+const NEW_ITEMS = closet.slice(-4);
+
 export default function Home() {
+  const user = useAuthStore((s) => s.user);
+
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-6 p-6">
-      <h1 className="text-3xl font-semibold tracking-tight">
-        {greeting()}, Amber
-      </h1>
-      <p className="text-muted-foreground">What are we wearing today?</p>
-      <div className="flex gap-3">
-        <Link to="/style" className={buttonVariants()}>
-          Style Me
-        </Link>
-        <Link to="/saved" className={buttonVariants({ variant: "outline" })}>
-          Saved looks
-        </Link>
+    <div className="min-h-svh bg-background">
+      {/* Header */}
+      <div className="px-5 pt-14 pb-10 bg-foreground text-background">
+        <p className="text-[10px] tracking-[0.35em] uppercase text-background/40 font-medium mb-1">
+          {todayLabel()}
+        </p>
+        <h1 className="text-5xl font-black tracking-tight leading-[1.05]">
+          {greeting()},
+          <br />
+          {user?.name ?? "Amber"}
+        </h1>
+        <p className="mt-3 text-sm text-background/55">What are we wearing today?</p>
       </div>
+
+      {/* Quick actions — floats over header bottom */}
+      <div className="px-5 -mt-5 relative z-10">
+        <div className="bg-background rounded-2xl border border-border shadow-sm p-4 flex gap-3">
+          <Link
+            to="/style"
+            className="flex-1 flex items-center justify-center gap-2 bg-foreground text-background rounded-xl h-12 text-sm font-bold tracking-wide hover:opacity-90 active:scale-[0.98] transition-all"
+          >
+            <Sparkles size={15} strokeWidth={2} />
+            Style Me
+          </Link>
+          <Link
+            to="/saved"
+            className="flex-1 flex items-center justify-center gap-2 border border-border rounded-xl h-12 text-sm font-bold tracking-wide hover:bg-muted active:scale-[0.98] transition-all"
+          >
+            Saved Looks
+          </Link>
+        </div>
+      </div>
+
+      {/* Trending Now */}
+      <section className="mt-8 px-5">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-[10px] tracking-[0.35em] uppercase font-semibold text-muted-foreground">
+            Trending Now
+          </h2>
+          <button className="flex items-center gap-0.5 text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors">
+            See all
+            <ChevronRight size={11} />
+          </button>
+        </div>
+
+        {/* Horizontal scroll */}
+        <div
+          className="flex gap-3 overflow-x-auto pb-1 -mx-5 px-5"
+          style={{ scrollbarWidth: "none" }}
+        >
+          {trends.map((trend) => (
+            <button
+              key={trend.id}
+              className="flex-shrink-0 w-44 h-60 rounded-2xl overflow-hidden relative group active:scale-[0.97] transition-transform"
+              style={{ background: trend.gradient }}
+            >
+              <div className="absolute inset-0 flex flex-col justify-end p-4 text-left">
+                <p
+                  className="text-[9px] tracking-widest uppercase font-semibold mb-1.5"
+                  style={{
+                    color: trend.textDark ? "rgba(0,0,0,0.45)" : "rgba(255,255,255,0.55)",
+                  }}
+                >
+                  {trend.keywords[0]}
+                </p>
+                <h3
+                  className="text-[1.1rem] font-black leading-tight"
+                  style={{ color: trend.textDark ? "#1a1a1a" : "#ffffff" }}
+                >
+                  {trend.name}
+                </h3>
+                <p
+                  className="text-xs mt-1.5 leading-snug"
+                  style={{
+                    color: trend.textDark ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.65)",
+                  }}
+                >
+                  {trend.tagline}
+                </p>
+              </div>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Just Dropped */}
+      <section className="mt-8 px-5 pb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-[10px] tracking-[0.35em] uppercase font-semibold text-muted-foreground">
+            Just Dropped
+          </h2>
+          <Link
+            to="/closet"
+            className="flex items-center gap-0.5 text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors"
+          >
+            View closet
+            <ChevronRight size={11} />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          {NEW_ITEMS.map((item) => (
+            <div
+              key={item.id}
+              className="rounded-xl overflow-hidden border border-border bg-card group cursor-pointer active:scale-[0.98] transition-transform"
+            >
+              <div
+                className="h-28 w-full"
+                style={{ backgroundColor: SWATCH[item.colorFamily] }}
+              />
+              <div className="px-3 py-2.5">
+                <p className="text-xs font-semibold leading-tight truncate">{item.name}</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5 capitalize">
+                  {item.category.replace("accessory-", "")}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
