@@ -233,34 +233,31 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     }
   },
   excludePiece: async (itemId) => {
-    const currentRequest = buildRequestFromState(get());
+    const currentOutfit = get().currentOutfit;
 
-    if (currentRequest === null) {
-      set({ error: "Choose an occasion and vibe before styling.", isGenerating: false });
+    if (currentOutfit === null) {
       return false;
     }
 
-    const nextRequest = mergeDeltaIntoRequest(currentRequest, {
-      excludeIds: [...(currentRequest.excludeIds ?? []), itemId],
+    if (!currentOutfit.itemIds.includes(itemId)) {
+      return false;
+    }
+
+    const nextRequest = {
+      ...currentOutfit.request,
+      excludeIds: [...new Set([...(currentOutfit.request.excludeIds ?? []), itemId])],
+    };
+
+    set({
+      currentOutfit: {
+        ...currentOutfit,
+        itemIds: currentOutfit.itemIds.filter((currentItemId) => currentItemId !== itemId),
+        request: nextRequest,
+      },
+      request: nextRequest,
+      error: null,
     });
 
-    set({ request: nextRequest, isGenerating: true, error: null });
-
-    try {
-      const outfit = await stylist.generateOutfit(nextRequest);
-      set({ currentOutfit: outfit, request: nextRequest });
-      await storage.setLastRequest(nextRequest);
-      return true;
-    } catch (error) {
-      if (error instanceof NoValidOutfitError) {
-        set({ error: "I couldn’t build a full look with those choices. Try loosening one constraint." });
-      } else {
-        set({ error: "Something went wrong while styling. Please try again." });
-      }
-
-      return false;
-    } finally {
-      set({ isGenerating: false });
-    }
+    return true;
   },
 }));
