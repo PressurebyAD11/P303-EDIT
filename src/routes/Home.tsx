@@ -20,7 +20,6 @@ function todayLabel(): string {
   });
 }
 
-
 const NEW_ITEMS = closet.slice(-4);
 
 export default function Home() {
@@ -60,11 +59,11 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Trending Now */}
+      {/* Colors for Fall */}
       <section className="mt-8 px-5">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-[10px] tracking-[0.35em] uppercase font-semibold text-muted-foreground">
-            Trending Now
+            Colors for Fall
           </h2>
           <button className="flex items-center gap-0.5 text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors">
             See all
@@ -74,7 +73,7 @@ export default function Home() {
 
         {/* Horizontal scroll */}
         <div
-          className="flex gap-3 overflow-x-auto pb-1 -mx-5 px-5"
+          className="flex gap-3 overflow-x-auto pb-1"
           style={{ scrollbarWidth: "none" }}
         >
           {trends.map((trend, index) => (
@@ -129,11 +128,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Just Dropped */}
+      {/* Recently Added */}
       <section className="mt-8 px-5 pb-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-[10px] tracking-[0.35em] uppercase font-semibold text-muted-foreground">
-            Just Dropped
+            Recently Added
           </h2>
           <Link
             to="/closet"
