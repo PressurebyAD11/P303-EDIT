@@ -77,35 +77,52 @@ export default function Home() {
           className="flex gap-3 overflow-x-auto pb-1 -mx-5 px-5"
           style={{ scrollbarWidth: "none" }}
         >
-          {trends.map((trend) => (
+          {trends.map((trend, index) => (
             <button
               key={trend.id}
               className="flex-shrink-0 w-44 h-60 rounded-2xl overflow-hidden relative group active:scale-[0.97] transition-transform"
               style={{ background: trend.gradient }}
             >
-              <div className="absolute inset-0 flex flex-col justify-end p-4 text-left">
-                <p
-                  className="text-[9px] tracking-widest uppercase font-semibold mb-1.5"
-                  style={{
-                    color: trend.textDark ? "rgba(0,0,0,0.45)" : "rgba(255,255,255,0.55)",
-                  }}
+              {/* Depth overlay — faint top-to-bottom darkening */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: "linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.18) 100%)" }}
+              />
+
+              <div className="absolute inset-0 flex flex-col p-4 text-left">
+                {/* Editorial index number */}
+                <span
+                  className="text-6xl font-semibold leading-none"
+                  style={{ color: trend.textDark ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.18)" }}
                 >
-                  {trend.keywords[0]}
-                </p>
-                <h3
-                  className="text-[1.1rem] font-black leading-tight"
-                  style={{ color: trend.textDark ? "#1a1a1a" : "#ffffff" }}
-                >
-                  {trend.name}
-                </h3>
-                <p
-                  className="text-xs mt-1.5 leading-snug"
-                  style={{
-                    color: trend.textDark ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.65)",
-                  }}
-                >
-                  {trend.tagline}
-                </p>
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+
+                {/* Text group — pinned to bottom */}
+                <div className="mt-auto">
+                  <p
+                    className="text-[9px] tracking-widest uppercase font-semibold mb-1.5"
+                    style={{
+                      color: trend.textDark ? "rgba(0,0,0,0.45)" : "rgba(255,255,255,0.55)",
+                    }}
+                  >
+                    {trend.keywords[0]}
+                  </p>
+                  <h3
+                    className="text-[1.1rem] font-black leading-tight min-h-[2.75rem]"
+                    style={{ color: trend.textDark ? "#1a1a1a" : "#ffffff" }}
+                  >
+                    {trend.name}
+                  </h3>
+                  <p
+                    className="text-xs mt-1.5 leading-snug min-h-[2.0625rem]"
+                    style={{
+                      color: trend.textDark ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.65)",
+                    }}
+                  >
+                    {trend.tagline}
+                  </p>
+                </div>
               </div>
             </button>
           ))}
