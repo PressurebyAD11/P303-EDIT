@@ -1,4 +1,4 @@
-import { COLOR_SWATCH, CONSTRAINT_LABELS, CONSTRAINT_ORDER } from "@/lib/constants";
+import { SLOT_SWATCH, CONSTRAINT_LABELS, CONSTRAINT_ORDER } from "@/lib/constants";
 import { closet } from "@/data/closet";
 import { useSessionStore } from "@/state/sessionStore";
 
@@ -85,7 +85,7 @@ export function ConstraintsStep() {
                   <span
                     aria-hidden="true"
                     className="size-2.5 rounded-full shrink-0 ring-1 ring-border/50"
-                    style={{ backgroundColor: COLOR_SWATCH[item.colorFamily] }}
+                    style={{ backgroundColor: SLOT_SWATCH[item.category] }}
                   />
                   <span
                     className={`text-sm font-medium truncate ${

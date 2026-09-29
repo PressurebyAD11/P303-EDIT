@@ -2,7 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import type { Variants } from "framer-motion";
 
 import { closetById } from "@/data/closet";
-import { COLOR_SWATCH } from "@/lib/constants";
+import { SLOT_SWATCH } from "@/lib/constants";
 import type { Outfit, SlotCategory } from "@/lib/types";
 
 type OutfitViewProps = {
@@ -52,13 +52,13 @@ function ItemCard({
     <div className="rounded-2xl border border-border bg-card overflow-hidden">
       <div
         className="w-full aspect-[4/3]"
-        style={{ backgroundColor: COLOR_SWATCH[item.colorFamily] }}
+        style={{ backgroundColor: SLOT_SWATCH[item.category] }}
       />
       <div className="px-4 py-3 flex items-center gap-3">
         <span
           aria-hidden="true"
           className="size-2.5 shrink-0 rounded-full ring-1 ring-border/60"
-          style={{ backgroundColor: COLOR_SWATCH[item.colorFamily] }}
+          style={{ backgroundColor: SLOT_SWATCH[item.category] }}
         />
         <div className="min-w-0">
           <p className="truncate text-sm font-bold text-foreground">{item.name}</p>

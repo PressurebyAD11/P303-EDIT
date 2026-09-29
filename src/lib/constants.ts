@@ -99,14 +99,16 @@ export const LAYER: Record<SlotCategory, number> = {
   "accessory-bag": 40,
 };
 
-/** Rough swatch color per colorFamily, used by the interim flat-lay render. */
-export const COLOR_SWATCH: Record<ClosetColorFamily, string> = {
-  neutral: "#8a8a86",
-  warm: "#c8a48a",
-  cool: "#8aa0c8",
-  bold: "#c8628a",
+/** Swatch color per slot category, used by the interim flat-lay render. */
+export const SLOT_SWATCH: Record<SlotCategory, string> = {
+  top:                  "#D9D2C7",
+  bottom:               "#A89A8C",
+  dress:                "#B8A0A0",
+  outerwear:            "#8C8378",
+  shoes:                "#5C5651",
+  "accessory-earrings": "#C9A66B",
+  "accessory-bag":      "#B08D6A",
 };
-type ClosetColorFamily = "neutral" | "warm" | "cool" | "bold";
 
 /** Keywords used to parse free-text feedback into slots (see feedbackMapping). */
 export const SLOT_KEYWORDS: Record<SlotCategory, string[]> = {

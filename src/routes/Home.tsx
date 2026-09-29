@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Sparkles, ChevronRight } from "lucide-react";
+import { SLOT_SWATCH } from "@/lib/constants";
 import { trends } from "@/data/trends";
 import { closet } from "@/data/closet";
 import { useAuthStore } from "@/state/authStore";
@@ -19,12 +20,6 @@ function todayLabel(): string {
   });
 }
 
-const SWATCH: Record<string, string> = {
-  neutral: "#d1cdc8",
-  warm: "#d4b89a",
-  cool: "#9fb4d4",
-  bold: "#d47090",
-};
 
 const NEW_ITEMS = closet.slice(-4);
 
@@ -140,7 +135,7 @@ export default function Home() {
             >
               <div
                 className="h-28 w-full"
-                style={{ backgroundColor: SWATCH[item.colorFamily] }}
+                style={{ backgroundColor: SLOT_SWATCH[item.category] }}
               />
               <div className="px-3 py-2.5">
                 <p className="text-xs font-semibold leading-tight truncate">{item.name}</p>

@@ -1,14 +1,8 @@
 import { Link } from "react-router-dom";
 import { Sparkles, Heart } from "lucide-react";
+import { SLOT_SWATCH } from "@/lib/constants";
 import { mockSavedOutfits } from "@/data/savedOutfits";
 import { closetById } from "@/data/closet";
-
-const SWATCH: Record<string, string> = {
-  neutral: "#d1cdc8",
-  warm: "#d4b89a",
-  cool: "#9fb4d4",
-  bold: "#d47090",
-};
 
 const OCCASION_LABEL: Record<string, string> = {
   "date-night": "Date night",
@@ -72,7 +66,7 @@ export default function Saved() {
                       <div
                         key={i}
                         className="flex-1 h-full"
-                        style={{ backgroundColor: SWATCH[item.colorFamily] }}
+                        style={{ backgroundColor: SLOT_SWATCH[item.category] }}
                       />
                     ))}
                   </div>
