@@ -3,7 +3,8 @@ import type { Variants } from "framer-motion";
 
 import { closetById } from "@/data/closet";
 import { SLOT_SWATCH } from "@/lib/constants";
-import type { Outfit, SlotCategory } from "@/lib/types";
+import type { ClosetItem, Outfit, SlotCategory } from "@/lib/types";
+import { ItemImage } from "@/components/outfit/ItemImage";
 
 type OutfitViewProps = {
   outfit: Outfit;
@@ -43,17 +44,10 @@ const cardVariants = {
   }),
 } satisfies Variants;
 
-function ItemCard({
-  item,
-}: {
-  item: NonNullable<ReturnType<typeof closetById.get>>;
-}) {
+function ItemCard({ item }: { item: ClosetItem }) {
   return (
     <div className="rounded-2xl border border-border bg-card overflow-hidden">
-      <div
-        className="w-full aspect-[4/3]"
-        style={{ backgroundColor: SLOT_SWATCH[item.category] }}
-      />
+      <ItemImage item={item} className="w-full aspect-[4/3]" />
       <div className="px-4 py-3 flex items-center gap-3">
         <span
           aria-hidden="true"

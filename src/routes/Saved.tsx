@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Sparkles, Heart } from "lucide-react";
-import { SLOT_SWATCH } from "@/lib/constants";
+import { ItemImage } from "@/components/outfit/ItemImage";
 import { mockSavedOutfits } from "@/data/savedOutfits";
 import { closetById } from "@/data/closet";
 
@@ -60,14 +60,10 @@ export default function Saved() {
                   key={look.id}
                   className="rounded-2xl border border-border overflow-hidden bg-card active:scale-[0.99] transition-transform cursor-pointer"
                 >
-                  {/* Color swatch strip */}
+                  {/* Item image strip */}
                   <div className="h-28 flex">
                     {items.slice(0, 5).map((item, i) => (
-                      <div
-                        key={i}
-                        className="flex-1 h-full"
-                        style={{ backgroundColor: SLOT_SWATCH[item.category] }}
-                      />
+                      <ItemImage key={i} item={item} className="flex-1 h-full" />
                     ))}
                   </div>
 

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Sparkles, ChevronRight } from "lucide-react";
-import { SLOT_SWATCH } from "@/lib/constants";
+import { ItemImage } from "@/components/outfit/ItemImage";
 import { trends } from "@/data/trends";
 import { closet } from "@/data/closet";
 import { useAuthStore } from "@/state/authStore";
@@ -150,10 +150,7 @@ export default function Home() {
               key={item.id}
               className="rounded-xl overflow-hidden border border-border bg-card group cursor-pointer active:scale-[0.98] transition-transform"
             >
-              <div
-                className="h-28 w-full"
-                style={{ backgroundColor: SLOT_SWATCH[item.category] }}
-              />
+              <ItemImage item={item} className="h-28 w-full" />
               <div className="px-3 py-2.5">
                 <p className="text-xs font-semibold leading-tight truncate">{item.name}</p>
                 <p className="text-[10px] text-muted-foreground mt-0.5 capitalize">

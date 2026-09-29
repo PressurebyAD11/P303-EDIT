@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Plus, Search } from "lucide-react";
 import { toast } from "sonner";
-import { SLOT_SWATCH } from "@/lib/constants";
+import { ItemImage } from "@/components/outfit/ItemImage";
 import { closet } from "@/data/closet";
 import type { ClosetItem, SlotCategory } from "@/lib/types";
 import {
@@ -148,10 +148,7 @@ export default function Closet() {
                 className="rounded-xl overflow-hidden border border-border bg-card cursor-pointer active:scale-[0.98] transition-transform"
               >
                 <div className="relative">
-                  <div
-                    className="h-28 w-full"
-                    style={{ backgroundColor: SLOT_SWATCH[item.category] }}
-                  />
+                  <ItemImage item={item} className="h-28 w-full" />
                   {item.id.startsWith("new-") && (
                     <span className="absolute top-2 right-2 text-[9px] uppercase tracking-widest bg-foreground text-background rounded-full px-2 py-0.5 font-semibold">
                       New
