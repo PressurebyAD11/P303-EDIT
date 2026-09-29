@@ -101,13 +101,13 @@ export const LAYER: Record<SlotCategory, number> = {
 
 /** Swatch color per slot category, used by the interim flat-lay render. */
 export const SLOT_SWATCH: Record<SlotCategory, string> = {
-  top:                  "#D9D2C7",
-  bottom:               "#A89A8C",
-  dress:                "#B8A0A0",
-  outerwear:            "#8C8378",
-  shoes:                "#5C5651",
-  "accessory-earrings": "#C9A66B",
-  "accessory-bag":      "#B08D6A",
+  top:                  "#C56B4E",
+  bottom:               "#3E4C6D",
+  dress:                "#7B4B6B",
+  outerwear:            "#5F7355",
+  shoes:                "#2E2A28",
+  "accessory-earrings": "#C9A227",
+  "accessory-bag":      "#A5643C",
 };
 
 /** Keywords used to parse free-text feedback into slots (see feedbackMapping). */
